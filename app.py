@@ -21,5 +21,32 @@ def get_loyal_clients():
     else:
         return "Something has gone wrong, sorry"
 
+@app.post("/api/clients")
+def post_client():
+    username = request.json.get("username")
+    password = request.json.get("password")
+    results = dbhelpers.run_procedure('call new_client(?,?)', [username, password])
+    if(type(results) == list):
+        return json.dumps(results, default=str)
+    else:
+        return "Something has gone wrong, sorry"
 
+@app.delete("/api/clients")
+def delete_client():
+    username = request.json.get("username")
+    password = request.json.get("password")
+    results = dbhelpers.run_procedure('call delete_client(?,?)', [username, password])
+    return json.dumps(results, default=str)
+
+
+@app.patch("/api/clients")
+def patch_client():
+    username = request.json.get("username")
+    points = request.json.get("points")
+    results = dbhelpers.run_procedure('call update_points(?,?)', [username, points])
+    if(type(results) == list):
+        return json.dumps(results, default=str)
+    else:
+        return "Something has gone wrong, sorry"
+    
 app.run(debug=True)
